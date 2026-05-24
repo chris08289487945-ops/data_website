@@ -6,12 +6,12 @@ const DEFAULT_MOCK_DATA = {
     { id: 'c3', name: '顯示卡' }
   ],
   generalItems: [
-    { id: 'g1', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1511385348-a52b4a160dc2?w=500&q=80', price: 29900, name: '高階智慧型手機', stock: 15, desc: '最新的旗艦級手機，配備強大的處理器與相機。不僅擁有極致的效能，更具備令人驚豔的顯示螢幕。' },
-    { id: 'g2', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80', price: 45000, name: '輕薄筆記型電腦', stock: 8, desc: '適合商務與創作者的輕薄高效能筆電。具備長效電池續航力，讓您隨時隨地保持生產力。' },
-    { id: 'g3', categoryId: 'c2', img: 'https://images.unsplash.com/photo-1542222024-c39e2281f121?w=500&q=80', price: 120, name: '有機洗髮精', stock: 50, desc: '天然植物萃取，溫和不刺激。適合各種髮質，洗後清爽無負擔。' },
-    { id: 'g4', categoryId: 'c2', img: 'https://pic.616pic.com/ys_bnew_img/00/12/93/IoeHbh1sY8.jpg', price: 2000, name: 'zhi yan de piyan', stock: 100, desc: '100 % 純天然，用過都說讚。' },
-    { id: 'g5', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80', price: 10990, name: 'ASUS ROG RTX3060', stock: 10, desc: '華碩 ROG 玩家共和國高階顯示卡，散熱極佳，支援光線追蹤。' },
-    { id: 'g6', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=500&q=80', price: 25990, name: 'GIGABYTE RTX5060', stock: 5, desc: '技嘉最新世代顯示卡，效能突破天際，暢玩所有 3A 大作。' }
+    { id: 'g1', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1511385348-a52b4a160dc2?w=500&q=80', price: 29900, name: '高階智慧型手機', stock: 15, desc: '最新的旗艦級手機，配備強大的處理器與相機。不僅擁有極致的效能，更具備令人驚豔的顯示螢幕。', specs: '螢幕: 6.7 吋 / 儲存容量: 256GB / 顏色: 曜石黑' },
+    { id: 'g2', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80', price: 45000, name: '輕薄筆記型電腦', stock: 8, desc: '適合商務與創作者的輕薄高效能筆電。具備長效電池續航力，讓您隨時隨地保持生產力。', specs: '螢幕: 14 吋 / 處理器: Core i7 / 記憶體: 16GB RAM' },
+    { id: 'g3', categoryId: 'c2', img: 'https://images.unsplash.com/photo-1542222024-c39e2281f121?w=500&q=80', price: 120, name: '有機洗髮精', stock: 50, desc: '天然植物萃取，溫和不刺激。適合各種髮質，洗後清爽無負擔。', specs: '容量: 500ml / 產地: 台灣' },
+    { id: 'g4', categoryId: 'c2', img: 'https://pic.616pic.com/ys_bnew_img/00/12/93/IoeHbh1sY8.jpg', price: 2000, name: '極品痔瘡藥膏', stock: 100, desc: '100 % 純天然，用過都說讚。', specs: '容量: 30g / 使用方式: 外用' },
+    { id: 'g5', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80', price: 10990, name: 'ASUS ROG RTX3060', stock: 10, desc: '華碩 ROG 玩家共和國高階顯示卡，散熱極佳，支援光線追蹤。', specs: '晶片: GeForce RTX 3060 / 記憶體: 12GB GDDR6' },
+    { id: 'g6', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=500&q=80', price: 25990, name: 'GIGABYTE RTX5060', stock: 5, desc: '技嘉最新世代顯示卡，效能突破天際，暢玩所有 3A 大作。', specs: '晶片: GeForce RTX 5060 / 記憶體: 16GB GDDR7' }
   ],
   auctionItems: [
     { id: 'a1', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80', name: '限量版智慧手錶', startPrice: 5000, currentPrice: 8500, timeLeft: 7200 },
@@ -26,7 +26,30 @@ const DEFAULT_MOCK_DATA = {
     joinDate: ''
   },
   cart: [],
-  orders: []
+  orders: [
+    {
+      orderId: 'ORD-882910',
+      time: '2026-05-23 14:30:22',
+      data: '高階智慧型手機 x2, 有機洗髮精 x3',
+      amount: 60160,
+      status: '已出貨',
+      paymentMethod: '信用卡',
+      trackingNumber: 'TW123456789',
+      deliveryStatus: '已送達',
+      shippingTime: '2026-05-23 16:00:00'
+    },
+    {
+      orderId: 'ORD-109283',
+      time: '2026-05-24 10:15:45',
+      data: 'ASUS ROG RTX3060 x1, 輕薄筆記型電腦 x1',
+      amount: 55990,
+      status: '處理中',
+      paymentMethod: '貨到付款',
+      trackingNumber: '待發貨',
+      deliveryStatus: '準備出貨',
+      shippingTime: '-'
+    }
+  ]
 };
 
 const MOCK_DATA = JSON.parse(localStorage.getItem('MOCK_DATA')) || DEFAULT_MOCK_DATA;
@@ -53,18 +76,27 @@ function formatTime(seconds) {
 function renderNavbar() {
   const existingNav = document.querySelector('.navbar');
   if (existingNav) existingNav.remove();
+  
+  // 取得當前檔案路徑來判斷導覽項目是否 active
+  const path = window.location.pathname;
+  const isSeller = path.includes('seller.html') ? 'active' : '';
+  const isMember = path.includes('member.html') ? 'active' : '';
+  const isOrders = path.includes('orders.html') ? 'active' : '';
+  const isCart = path.includes('cart.html') ? 'active' : '';
+
   const navHTML = `
     <nav class="navbar">
       <div class="nav-left">
-        <a href="index.html" class="logo">piyan專賣店</a>
+        <a href="index.html" class="logo">PCHouse專賣店</a>
         <div id="category-links" style="display:flex; gap:10px;">
           ${MOCK_DATA.categories.map(c => `<a href="index.html?category=${c.id}" class="nav-link">${c.name}</a>`).join('')}
         </div>
       </div>
       <div class="nav-right">
-        <a href="member.html" class="nav-link">會員專區</a>
-        <a href="orders.html" class="nav-link">訂單表</a>
-        <a href="cart.html" class="nav-link">購物車 <span class="badge status-shipped">${MOCK_DATA.cart.length}</span></a>
+        <a href="seller.html" class="nav-link ${isSeller}">我是賣家</a>
+        <a href="member.html" class="nav-link ${isMember}">會員專區</a>
+        <a href="orders.html" class="nav-link ${isOrders}">訂單表</a>
+        <a href="cart.html" class="nav-link ${isCart}">購物車 <span class="badge status-shipped">${MOCK_DATA.cart.length}</span></a>
       </div>
     </nav>
   `;
@@ -405,8 +437,11 @@ function renderProductDetail() {
       <img src="${item.img}" alt="${item.name}" class="product-detail-img">
       <div class="product-detail-info">
         <h2 style="font-size: 2.5rem; margin-bottom: 10px;">${item.name}</h2>
-        <div style="color: var(--text-secondary); margin-bottom: 20px;">商品 ID: ${item.id}</div>
-        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 20px;">${formatCurrency(item.price)}</div>
+        <div style="color: var(--text-secondary); margin-bottom: 15px;">商品 ID: ${item.id}</div>
+        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 15px;">${formatCurrency(item.price)}</div>
+        <div style="margin-bottom: 15px; color: var(--text-secondary); font-size: 1rem;">
+          <strong>規格描述：</strong> ${item.specs || '無規格資料'}
+        </div>
         <div style="margin-bottom: 20px; color: var(--text-secondary);">庫存數量: ${item.stock}</div>
         <button class="btn" style="width: 100%; padding: 16px; font-size: 1.1rem;" onclick="addToCart('${item.id}')">加入購物車</button>
       </div>

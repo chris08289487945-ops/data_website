@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我是賣家 - 管理者主控台</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container" style="margin-top: 20px;">
+    
+    <div class="seller-header">
+      <h2 class="section-title" style="margin: 0;">賣家管理主控台</h2>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-secondary" onclick="openAddAuctionModal()">新增競標商品</button>
+        <button class="btn" onclick="openAddProductModal()">新增一般商品</button>
+      </div>
+    </div>
+
+    <!-- 頂部數據看板概覽 -->
+    <div class="dashboard-summary">
+      <div class="glass-panel summary-card">
+        <span class="title">一般商品總數</span>
+        <span class="value" id="summary-total-products">0</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="title">競標商品總數</span>
+        <span class="value" id="summary-total-auctions">0</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="title">庫存吃緊商品數</span>
+        <span class="value" id="summary-warning-products" style="color: #e63946;">0</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="title">總銷售金額</span>
+        <span class="value" id="summary-total-sales" style="color: #558b2f;">$0</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="title">訂單總筆數</span>
+        <span class="value" id="summary-total-orders">0</span>
+      </div>
+    </div>
+
+    <!-- 分頁選單 Tabs -->
+    <div class="seller-tabs">
+      <button class="seller-tab-btn active" onclick="switchTab('stock-warning')">庫存預警表</button>
+      <button class="seller-tab-btn" onclick="switchTab('sales-rank')">銷售業績排行</button>
+      <button class="seller-tab-btn" onclick="switchTab('orders-track')">物流狀態追蹤</button>
+      <button class="seller-tab-btn" onclick="switchTab('product-mgmt')">一般商品管理</button>
+      <button class="seller-tab-btn" onclick="switchTab('auction-mgmt')">競標商品管理</button>
+    </div>
+
+    <!-- Tab 1: 庫存預警表 -->
+    <div id="tab-stock-warning" class="seller-tab-content active">
+      <div class="glass-panel">
+        <h3 style="margin-bottom: 10px;">商品庫存預警表</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">系統自動列出目前庫存低於 15 件的商品，您可在此快速補貨。</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>圖片</th>
+                <th>商品 ID</th>
+                <th>商品名稱</th>
+                <th>目前庫存</th>
+                <th>狀態</th>
+                <th>快速補貨</th>
+              </tr>
+            </thead>
+            <tbody id="stock-warning-table-body">
+              <!-- 動態生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: 銷售業績排行 -->
+    <div id="tab-sales-rank" class="seller-tab-content">
+      <div class="glass-panel">
+        <h3 style="margin-bottom: 10px;">銷售業績排行表</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">依據已建立的訂單數據，統計各商品的銷售總量與累積金額排行。</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>排行</th>
+                <th>商品 ID</th>
+                <th>商品名稱</th>
+                <th>銷售數量</th>
+                <th>銷售總額</th>
+              </tr>
+            </thead>
+            <tbody id="sales-rank-table-body">
+              <!-- 動態生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: 物流狀態追蹤 -->
+    <div id="tab-orders-track" class="seller-tab-content">
+      <div class="glass-panel">
+        <h3 style="margin-bottom: 10px;">訂單物流狀態追蹤表</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">在此管理買家成立的訂單，更新其出貨進度與物流單號。</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>訂單 ID</th>
+                <th>下單時間</th>
+                <th>購買明細</th>
+                <th>訂單金額</th>
+                <th>物流狀態</th>
+                <th>物流單號</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="orders-track-table-body">
+              <!-- 動態生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: 一般商品管理 -->
+    <div id="tab-product-mgmt" class="seller-tab-content">
+      <div class="glass-panel">
+        <h3 style="margin-bottom: 10px;">一般商品管理</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">管理商店上架的一般商品，您可以進行新增、修改與下架刪除。</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>圖片</th>
+                <th>分類</th>
+                <th>商品 ID</th>
+                <th>商品名稱</th>
+                <th>價格</th>
+                <th>規格</th>
+                <th>庫存</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="product-mgmt-table-body">
+              <!-- 動態生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: 競標商品管理 -->
+    <div id="tab-auction-mgmt" class="seller-tab-content">
+      <div class="glass-panel">
+        <h3 style="margin-bottom: 10px;">競標商品管理</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">管理商店上架的競標商品，您可以新增、編輯或下架刪除競標項目。</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>圖片</th>
+                <th>商品 ID</th>
+                <th>商品名稱</th>
+                <th>起標價</th>
+                <th>目前最高價</th>
+                <th>剩餘時間</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="auction-mgmt-table-body">
+              <!-- 動態生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 商品彈窗 Modal (新增/編輯一般商品與競標商品) -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">新增商品</h3>
+        <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- 隱藏欄位：儲存商品類型 ('general' | 'auction') 與 ID -->
+        <input type="hidden" id="form-product-type">
+        <input type="hidden" id="form-product-id">
+        
+        <div class="form-group">
+          <label for="form-product-name">商品名稱 *</label>
+          <input type="text" id="form-product-name" placeholder="請輸入商品名稱">
+        </div>
+        
+        <div class="form-group">
+          <label for="form-product-category">分類 *</label>
+          <select id="form-product-category">
+            <!-- 動態生成 -->
+          </select>
+        </div>
+
+        <!-- 一般商品專用欄位 -->
+        <div id="general-fields-container">
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label for="form-product-price">售價 (TWD) *</label>
+              <input type="number" id="form-product-price" min="0" placeholder="請輸入價格">
+            </div>
+            <div>
+              <label for="form-product-stock">庫存數量 *</label>
+              <input type="number" id="form-product-stock" min="0" placeholder="請輸入庫存數量">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="form-product-specs">規格描述 *</label>
+            <input type="text" id="form-product-specs" placeholder="例如：容量: 500ml / 產地: 台灣">
+          </div>
+        </div>
+
+        <!-- 競標商品專用欄位 -->
+        <div id="auction-fields-container" style="display: none;">
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label for="form-auction-startprice">起標價 (TWD) *</label>
+              <input type="number" id="form-auction-startprice" min="0" placeholder="請輸入起標價">
+            </div>
+            <div>
+              <label for="form-auction-time">競標時間 (小時) *</label>
+              <input type="number" id="form-auction-time" min="1" placeholder="請輸入小時數，例: 2">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="form-product-img">圖片連結網址</label>
+          <input type="text" id="form-product-img" placeholder="請輸入圖片 URL (留空則使用預設圖)">
+        </div>
+        
+        <div class="form-group">
+          <label for="form-product-desc">商品介紹描述</label>
+          <textarea id="form-product-desc" style="width:100%; min-height:100px; padding:12px; border:1px solid var(--surface-border); border-radius:8px; outline:none; font-family:inherit;" placeholder="請輸入商品詳細介紹"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeProductModal()">取消</button>
+        <button class="btn" onclick="saveProductForm()">確認儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // 在 script.js 載入後，我們便可以使用 MOCK_DATA、saveData、formatCurrency 等全域變數與函數。
+    
+    // 初始化渲染
+    window.addEventListener('load', () => {
+      // 確保分類選單有選項
+      initCategoryOptions();
+      // 渲染所有報表與列表
+      renderAllReports();
+    });
+
+    // 1. 初始化商品分類下拉選單
+    function initCategoryOptions() {
+      const select = document.getElementById('form-product-category');
+      if (select && MOCK_DATA.categories) {
+        select.innerHTML = MOCK_DATA.categories.map(c => 
+          `<option value="${c.id}">${c.name}</option>`
+        ).join('');
+      }
+    }
+
+    // 2. 切換 Tab 分頁
+    function switchTab(tabId) {
+      // 切換按鈕 active 狀態
+      const buttons = document.querySelectorAll('.seller-tab-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      // 切換內容 active 狀態
+      const contents = document.querySelectorAll('.seller-tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      
+      // 切換分頁時重新渲染相關報表，確保資料最新
+      renderAllReports();
+    }
+
+    // 3. 渲染所有報表
+    function renderAllReports() {
+      renderSummaryCards();
+      renderStockWarningTable();
+      renderSalesRankTable();
+      renderOrdersTrackTable();
+      renderProductMgmtTable();
+      renderAuctionMgmtTable();
+    }
+
+    // 4. 渲染數據看板卡片
+    function renderSummaryCards() {
+      // 一般商品總數
+      const totalProds = MOCK_DATA.generalItems.length;
+      document.getElementById('summary-total-products').innerText = totalProds;
+
+      // 競標商品總數
+      const totalAuctions = MOCK_DATA.auctionItems.length;
+      document.getElementById('summary-total-auctions').innerText = totalAuctions;
+
+      // 庫存預警商品數
+      const warningProds = MOCK_DATA.generalItems.filter(i => i.stock < 15).length;
+      document.getElementById('summary-warning-products').innerText = warningProds;
+
+      // 訂單總筆數
+      const totalOrders = MOCK_DATA.orders.length;
+      document.getElementById('summary-total-orders').innerText = totalOrders;
+
+      // 總銷售金額 (只加總非「已取消」之訂單)
+      const totalSales = MOCK_DATA.orders
+        .filter(o => o.status !== '已取消')
+        .reduce((sum, o) => sum + o.amount, 0);
+      document.getElementById('summary-total-sales').innerText = formatCurrency(totalSales);
+    }
+
+    // 5. 渲染商品庫存預警表
+    function renderStockWarningTable() {
+      const tbody = document.getElementById('stock-warning-table-body');
+      const warningItems = MOCK_DATA.generalItems.filter(i => i.stock < 15);
+
+      if (warningItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">目前所有商品庫存皆非常充足，無預警商品。</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = warningItems.map(item => `
+        <tr>
+          <td><img src="${item.img || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100'}" class="table-img" alt="${item.name}"></td>
+          <td style="font-weight: 500;">${item.id}</td>
+          <td>${item.name}</td>
+          <td>
+            <span class="badge ${item.stock < 5 ? 'status-warning' : 'status-processing'}">
+              ${item.stock} 件
+            </span>
+          </td>
+          <td>
+            <span class="badge status-warning">${item.stock < 5 ? '庫存極低' : '補貨預警'}</span>
+          </td>
+          <td>
+            <div class="quick-input-group">
+              <input type="number" id="quick-stock-${item.id}" class="quick-stock-input" value="50" min="1">
+              <button class="btn" style="padding: 6px 12px; font-size: 0.85rem;" onclick="quickReplenish('${item.id}')">補貨</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 快速補貨
+    function quickReplenish(prodId) {
+      const input = document.getElementById(`quick-stock-${prodId}`);
+      const addQty = parseInt(input.value);
+      if (isNaN(addQty) || addQty <= 0) {
+        alert('請輸入大於 0 的補貨數量！');
+        return;
+      }
+
+      const item = MOCK_DATA.generalItems.find(i => i.id === prodId);
+      if (item) {
+        item.stock += addQty;
+        saveData();
+        alert(`商品 [${item.name}] 成功補貨 ${addQty} 件！目前庫存：${item.stock} 件。`);
+        renderAllReports();
+      }
+    }
+
+    // 6. 渲染銷售業績排行表
+    function renderSalesRankTable() {
+      const tbody = document.getElementById('sales-rank-table-body');
+      
+      // 統計所有訂單中的銷售數據
+      const salesMap = {};
+      
+      // 先把所有的商品初始化在 salesMap 裡
+      MOCK_DATA.generalItems.forEach(item => {
+        salesMap[item.name] = {
+          id: item.id,
+          name: item.name,
+          quantity: 0,
+          totalAmount: 0
+        };
+      });
+
+      MOCK_DATA.orders.forEach(order => {
+        if (order.status === '已取消') return;
+        
+        const items = order.data.split(', ');
+        items.forEach(itemStr => {
+          const match = itemStr.match(/(.+)\sx(\d+)/);
+          if (match) {
+            const name = match[1].trim();
+            const qty = parseInt(match[2]);
+            
+            let price = 0;
+            const originalItem = MOCK_DATA.generalItems.find(g => g.name === name);
+            if (originalItem) {
+              price = originalItem.price;
+            } else {
+              price = 0;
+            }
+
+            if (salesMap[name]) {
+              salesMap[name].quantity += qty;
+              salesMap[name].totalAmount += (qty * price);
+            } else {
+              salesMap[name] = {
+                id: originalItem ? originalItem.id : 'N/A',
+                name: name,
+                quantity: qty,
+                totalAmount: qty * price
+              };
+            }
+          }
+        });
+      });
+
+      // 轉換成陣列並按照銷售總額降序排序
+      const rankList = Object.values(salesMap).sort((a, b) => b.totalAmount - a.totalAmount);
+
+      if (rankList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-secondary);">無銷售數據。</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = rankList.map((item, idx) => `
+        <tr>
+          <td>
+            <span class="badge ${idx === 0 ? 'status-warning' : (idx === 1 ? 'status-processing' : 'status-ok')}" style="padding: 4px 10px;">
+              第 ${idx + 1} 名
+            </span>
+          </td>
+          <td style="font-weight: 500;">${item.id}</td>
+          <td style="font-weight: 500;">${item.name}</td>
+          <td>${item.quantity} 件</td>
+          <td style="font-weight: bold; color: var(--primary);">${formatCurrency(item.totalAmount)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // 7. 渲染物流狀態追蹤表
+    function renderOrdersTrackTable() {
+      const tbody = document.getElementById('orders-track-table-body');
+      
+      if (MOCK_DATA.orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary);">目前暫無買家訂單。</td></tr>`;
+        return;
+      }
+
+      // 按照訂單時間降序排列
+      const sortedOrders = [...MOCK_DATA.orders].sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      tbody.innerHTML = sortedOrders.map(order => `
+        <tr>
+          <td style="font-weight: 600;">${order.orderId}</td>
+          <td style="font-size: 0.85rem; color: var(--text-secondary);">${order.time}</td>
+          <td style="max-width: 200px; word-wrap: break-word; font-size: 0.9rem;">${order.data}</td>
+          <td style="font-weight: 600;">${formatCurrency(order.amount)}</td>
+          <td>
+            <select id="track-status-${order.orderId}" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--surface-border); font-size: 0.85rem;">
+              <option value="處理中" ${order.status === '處理中' ? 'selected' : ''}>處理中</option>
+              <option value="已出貨" ${order.status === '已出貨' ? 'selected' : ''}>已出貨</option>
+              <option value="已取消" ${order.status === '已取消' ? 'selected' : ''}>已取消</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" id="track-num-${order.orderId}" value="${order.trackingNumber === '待發貨' ? '' : order.trackingNumber}" placeholder="輸入物流單號" style="padding: 6px 10px; border-radius: 6px; border:1px solid var(--surface-border); font-size:0.85rem; width: 120px;">
+          </td>
+          <td>
+            <button class="btn" style="padding: 6px 12px; font-size:0.85rem;" onclick="updateOrderStatus('${order.orderId}')">儲存</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 更新訂單與物流狀態
+    function updateOrderStatus(orderId) {
+      const statusSelect = document.getElementById(`track-status-${orderId}`);
+      const numInput = document.getElementById(`track-num-${orderId}`);
+      const newStatus = statusSelect.value;
+      const newTrackNum = numInput.value.trim() || '待發貨';
+
+      const order = MOCK_DATA.orders.find(o => o.orderId === orderId);
+      if (order) {
+        order.status = newStatus;
+        order.trackingNumber = newTrackNum;
+        
+        // 自動連動 deliveryStatus
+        if (newStatus === '已出貨') {
+          order.deliveryStatus = '已出貨 / 運輸中';
+          order.shippingTime = new Date().toLocaleString();
+        } else if (newStatus === '處理中') {
+          order.deliveryStatus = '準備出貨';
+          order.shippingTime = '-';
+        } else if (newStatus === '已取消') {
+          order.deliveryStatus = '已取消';
+          order.shippingTime = '-';
+        }
+
+        saveData();
+        alert(`訂單 ${orderId} 狀態已成功更新！`);
+        renderAllReports();
+      }
+    }
+
+    // 8. 渲染一般商品管理專區表格
+    function renderProductMgmtTable() {
+      const tbody = document.getElementById('product-mgmt-table-body');
+      
+      if (MOCK_DATA.generalItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-secondary);">商店目前沒有任何商品，請點擊上方按鈕新增商品。</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = MOCK_DATA.generalItems.map(item => {
+        const cat = MOCK_DATA.categories.find(c => c.id === item.categoryId);
+        const catName = cat ? cat.name : '未分類';
+        
+        return `
+          <tr>
+            <td><img src="${item.img || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100'}" class="table-img" alt="${item.name}"></td>
+            <td><span class="badge status-ok">${catName}</span></td>
+            <td style="font-weight: 500;">${item.id}</td>
+            <td style="font-weight: 600;">${item.name}</td>
+            <td style="font-weight: 600; color: var(--primary);">${formatCurrency(item.price)}</td>
+            <td style="max-width: 150px; font-size: 0.85rem; color: var(--text-secondary); word-break: break-all;">${item.specs || '無規格描述'}</td>
+            <td>
+              <span class="badge ${item.stock < 15 ? 'status-warning' : 'status-ok'}">
+                ${item.stock} 件
+              </span>
+            </td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-secondary" style="padding: 6px 12px; font-size:0.85rem;" onclick="openEditProductModal('${item.id}')">編輯</button>
+                <button class="btn" style="background:#e53935; padding: 6px 12px; font-size:0.85rem;" onclick="deleteProduct('${item.id}')">刪除</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 9. 渲染競標商品管理專區表格
+    function renderAuctionMgmtTable() {
+      const tbody = document.getElementById('auction-mgmt-table-body');
+      
+      if (!MOCK_DATA.auctionItems || MOCK_DATA.auctionItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary);">商店目前沒有任何競標商品，請點擊上方按鈕新增。</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = MOCK_DATA.auctionItems.map(item => `
+        <tr>
+          <td><img src="${item.img || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100'}" class="table-img" alt="${item.name}"></td>
+          <td style="font-weight: 500;">${item.id}</td>
+          <td style="font-weight: 600;">${item.name}</td>
+          <td>${formatCurrency(item.startPrice)}</td>
+          <td style="font-weight: 600; color: #e63946;">${formatCurrency(item.currentPrice)}</td>
+          <td>
+            <span class="badge status-shipping">
+              ${formatTime(item.timeLeft)}
+            </span>
+          </td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-secondary" style="padding: 6px 12px; font-size:0.85rem;" onclick="openEditAuctionModal('${item.id}')">編輯</button>
+              <button class="btn" style="background:#e53935; padding: 6px 12px; font-size:0.85rem;" onclick="deleteAuction('${item.id}')">刪除</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 刪除一般商品
+    function deleteProduct(id) {
+      const item = MOCK_DATA.generalItems.find(i => i.id === id);
+      if (!item) return;
+
+      if (confirm(`確定要刪除一般商品 [${item.name}] 嗎？此動作不可逆！`)) {
+        MOCK_DATA.generalItems = MOCK_DATA.generalItems.filter(i => i.id !== id);
+        saveData();
+        alert('一般商品已成功刪除。');
+        renderAllReports();
+      }
+    }
+
+    // 刪除競標商品
+    function deleteAuction(id) {
+      const item = MOCK_DATA.auctionItems.find(i => i.id === id);
+      if (!item) return;
+
+      if (confirm(`確定要刪除競標商品 [${item.name}] 嗎？此動作不可逆！`)) {
+        MOCK_DATA.auctionItems = MOCK_DATA.auctionItems.filter(i => i.id !== id);
+        saveData();
+        alert('競標商品已成功刪除。');
+        renderAllReports();
+      }
+    }
+
+    // Modal 表單控制 (新增一般商品)
+    function openAddProductModal() {
+      document.getElementById('modal-title').innerText = '新增一般商品';
+      document.getElementById('form-product-type').value = 'general';
+      document.getElementById('form-product-id').value = '';
+      document.getElementById('form-product-name').value = '';
+      document.getElementById('form-product-price').value = '';
+      document.getElementById('form-product-stock').value = '';
+      document.getElementById('form-product-specs').value = '';
+      document.getElementById('form-product-img').value = '';
+      document.getElementById('form-product-desc').value = '';
+      
+      document.getElementById('general-fields-container').style.display = 'block';
+      document.getElementById('auction-fields-container').style.display = 'none';
+      
+      document.getElementById('product-modal').classList.add('active');
+    }
+
+    // Modal 表單控制 (新增競標商品)
+    function openAddAuctionModal() {
+      document.getElementById('modal-title').innerText = '新增競標商品';
+      document.getElementById('form-product-type').value = 'auction';
+      document.getElementById('form-product-id').value = '';
+      document.getElementById('form-product-name').value = '';
+      document.getElementById('form-auction-startprice').value = '';
+      document.getElementById('form-auction-time').value = '';
+      document.getElementById('form-product-img').value = '';
+      document.getElementById('form-product-desc').value = '';
+      
+      document.getElementById('general-fields-container').style.display = 'none';
+      document.getElementById('auction-fields-container').style.display = 'block';
+      
+      document.getElementById('product-modal').classList.add('active');
+    }
+
+    // 編輯一般商品彈窗
+    function openEditProductModal(id) {
+      const item = MOCK_DATA.generalItems.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('modal-title').innerText = '編輯一般商品';
+      document.getElementById('form-product-type').value = 'general';
+      document.getElementById('form-product-id').value = item.id;
+      document.getElementById('form-product-name').value = item.name;
+      document.getElementById('form-product-price').value = item.price;
+      document.getElementById('form-product-stock').value = item.stock;
+      document.getElementById('form-product-category').value = item.categoryId;
+      document.getElementById('form-product-specs').value = item.specs || '';
+      document.getElementById('form-product-img').value = item.img || '';
+      document.getElementById('form-product-desc').value = item.desc || '';
+
+      document.getElementById('general-fields-container').style.display = 'block';
+      document.getElementById('auction-fields-container').style.display = 'none';
+
+      document.getElementById('product-modal').classList.add('active');
+    }
+
+    // 編輯競標商品彈窗
+    function openEditAuctionModal(id) {
+      const item = MOCK_DATA.auctionItems.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('modal-title').innerText = '編輯競標商品';
+      document.getElementById('form-product-type').value = 'auction';
+      document.getElementById('form-product-id').value = item.id;
+      document.getElementById('form-product-name').value = item.name;
+      document.getElementById('form-auction-startprice').value = item.startPrice;
+      // 將秒數轉回小時，做四捨五入
+      document.getElementById('form-auction-time').value = Math.round(item.timeLeft / 3600);
+      document.getElementById('form-product-category').value = item.categoryId;
+      document.getElementById('form-product-img').value = item.img || '';
+      document.getElementById('form-product-desc').value = item.desc || '';
+
+      document.getElementById('general-fields-container').style.display = 'none';
+      document.getElementById('auction-fields-container').style.display = 'block';
+
+      document.getElementById('product-modal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.remove('active');
+    }
+
+    // 儲存商品（一般商品或競標商品）
+    function saveProductForm() {
+      const type = document.getElementById('form-product-type').value;
+      const id = document.getElementById('form-product-id').value;
+      const name = document.getElementById('form-product-name').value.trim();
+      const categoryId = document.getElementById('form-product-category').value;
+      const img = document.getElementById('form-product-img').value.trim() || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500';
+      const desc = document.getElementById('form-product-desc').value.trim();
+
+      if (!name || !categoryId) {
+        alert('請填寫商品名稱與分類！');
+        return;
+      }
+
+      if (type === 'general') {
+        const price = parseInt(document.getElementById('form-product-price').value);
+        const stock = parseInt(document.getElementById('form-product-stock').value);
+        const specs = document.getElementById('form-product-specs').value.trim();
+
+        if (isNaN(price) || isNaN(stock) || !specs) {
+          alert('請填寫一般商品的所有必填欄位 (*)。');
+          return;
+        }
+
+        if (id) {
+          const item = MOCK_DATA.generalItems.find(i => i.id === id);
+          if (item) {
+            item.name = name;
+            item.price = price;
+            item.stock = stock;
+            item.categoryId = categoryId;
+            item.specs = specs;
+            item.img = img;
+            item.desc = desc;
+          }
+        } else {
+          const newId = 'g' + (MOCK_DATA.generalItems.length + MOCK_DATA.generalItems.reduce((max, i) => {
+            const num = parseInt(i.id.replace('g', ''));
+            return num > max ? num : max;
+          }, 0) + 1);
+          
+          MOCK_DATA.generalItems.push({
+            id: newId,
+            categoryId,
+            img,
+            price,
+            name,
+            stock,
+            desc,
+            specs
+          });
+        }
+      } else if (type === 'auction') {
+        const startPrice = parseInt(document.getElementById('form-auction-startprice').value);
+        const hours = parseInt(document.getElementById('form-auction-time').value);
+
+        if (isNaN(startPrice) || isNaN(hours)) {
+          alert('請填寫競標商品的所有必填欄位 (*)。');
+          return;
+        }
+
+        if (id) {
+          const item = MOCK_DATA.auctionItems.find(i => i.id === id);
+          if (item) {
+            item.name = name;
+            item.startPrice = startPrice;
+            if (item.currentPrice < startPrice) {
+              item.currentPrice = startPrice;
+            }
+            item.timeLeft = hours * 3600;
+            item.categoryId = categoryId;
+            item.img = img;
+            item.desc = desc || '這是一件極具收藏價值的競標商品，擁有獨特的歷史與設計。';
+          }
+        } else {
+          const newId = 'a' + (MOCK_DATA.auctionItems.length + MOCK_DATA.auctionItems.reduce((max, i) => {
+            const num = parseInt(i.id.replace('a', ''));
+            return num > max ? num : max;
+          }, 0) + 1);
+
+          MOCK_DATA.auctionItems.push({
+            id: newId,
+            categoryId,
+            img,
+            name,
+            startPrice,
+            currentPrice: startPrice,
+            timeLeft: hours * 3600,
+            desc: desc || '這是一件極具收藏價值的競標商品，擁有獨特的歷史與設計。'
+          });
+        }
+      }
+
+      saveData();
+      alert('商品資料已儲存成功！');
+      closeProductModal();
+      renderAllReports();
+    }
+  </script>
+</body>
+</html>

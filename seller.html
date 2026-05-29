@@ -3,18 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我是賣家 - 管理者主控台</title>
+  <title>標標 | 賣家後台</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .login-wrapper {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 40px;
+      text-align: center;
+    }
+    .login-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: var(--text-primary);
+    }
+  </style>
 </head>
 <body>
-  <div class="container" style="margin-top: 20px;">
+  
+  <!-- 賣家登入區塊 -->
+  <div id="seller-login-container" style="display: none;">
+    <div class="glass-panel login-wrapper">
+      <h2 class="login-title">賣家後台登入</h2>
+      <div class="form-group" style="text-align: left;">
+        <label for="login-username">管理員帳號</label>
+        <input type="text" id="login-username" placeholder="請輸入賣家帳號">
+      </div>
+      <div class="form-group" style="text-align: left;">
+        <label for="login-password">管理員密碼</label>
+        <input type="password" id="login-password" placeholder="請輸入密碼">
+      </div>
+      <button class="btn" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 10px;" onclick="sellerLogin()">登入系統</button>
+    </div>
+  </div>
+
+  <!-- 賣家管理主控台 -->
+  <div class="container" id="seller-admin-container" style="margin-top: 20px; display: none;">
     
     <div class="seller-header">
       <h2 class="section-title" style="margin: 0;">賣家管理主控台</h2>
-      <div style="display: flex; gap: 10px;">
+      <div style="display: flex; gap: 10px; align-items: center;">
         <button class="btn btn-secondary" onclick="openAddAuctionModal()">新增競標商品</button>
         <button class="btn" onclick="openAddProductModal()">新增一般商品</button>
+        <button class="btn" style="background: #5d4037;" onclick="sellerLogout()">登出後台</button>
       </div>
     </div>
 
@@ -258,13 +291,53 @@
   <script>
     // 在 script.js 載入後，我們便可以使用 MOCK_DATA、saveData、formatCurrency 等全域變數與函數。
     
+    // 檢查登入狀態
+    let isSellerLoggedIn = localStorage.getItem('isSellerLoggedIn') === 'true';
+
     // 初始化渲染
     window.addEventListener('load', () => {
-      // 確保分類選單有選項
-      initCategoryOptions();
-      // 渲染所有報表與列表
-      renderAllReports();
+      checkLoginState();
     });
+
+    function checkLoginState() {
+      const loginContainer = document.getElementById('seller-login-container');
+      const adminContainer = document.getElementById('seller-admin-container');
+      
+      if (isSellerLoggedIn) {
+        loginContainer.style.display = 'none';
+        adminContainer.style.display = 'block';
+        initCategoryOptions();
+        renderAllReports();
+      } else {
+        loginContainer.style.display = 'block';
+        adminContainer.style.display = 'none';
+      }
+    }
+
+    function sellerLogin() {
+      const user = document.getElementById('login-username').value.trim();
+      const pass = document.getElementById('login-password').value;
+
+      if (user === 'pchouse' && pass === '0000') {
+        isSellerLoggedIn = true;
+        localStorage.setItem('isSellerLoggedIn', 'true');
+        alert('登入成功，歡迎回來！');
+        checkLoginState();
+      } else {
+        alert('帳號或密碼錯誤，請重新輸入！');
+      }
+    }
+
+    function sellerLogout() {
+      if (confirm('確定要登出賣家後台嗎？')) {
+        isSellerLoggedIn = false;
+        localStorage.setItem('isSellerLoggedIn', 'false');
+        // 清空輸入框
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+        checkLoginState();
+      }
+    }
 
     // 1. 初始化商品分類下拉選單
     function initCategoryOptions() {

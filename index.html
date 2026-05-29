@@ -4,21 +4,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PCHouse</title>
+  <title>標標</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .home-product-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px 60px;
+    }
+
+    .home-product-section {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 16px rgba(80, 110, 80, 0.06);
+    }
+
+    .home-section-title {
+      margin-bottom: 22px;
+      font-size: 1.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 14px;
+      border-left: 5px solid var(--primary);
+      color: var(--text-primary);
+    }
+
+    .home-product-section .product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .home-product-section .product-img {
+      background: #f8faf7;
+      height: 220px;
+      object-fit: contain;
+    }
+
+    @media (max-width: 640px) {
+      .home-product-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .home-product-section .product-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <div class="container">
-    <h2 class="section-title">🔥 競標商品</h2>
-    <div id="auction-items-container" class="product-grid"></div>
+  <div id="navbar-placeholder"></div>
+  <div class="home-product-columns">
+    <section class="home-product-section">
+      <h2 class="home-section-title">一般商品</h2>
+      <div id="general-items-container" class="product-grid"></div>
+    </section>
 
-    <h2 class="section-title" style="margin-top: 60px;">📦 一般商品</h2>
-    <div id="general-items-container" class="product-grid"></div>
+    <section class="home-product-section">
+      <h2 class="home-section-title">競標商品</h2>
+      <div id="auction-items-container" class="product-grid"></div>
+    </section>
   </div>
+
   <script src="script.js"></script>
 </body>
 

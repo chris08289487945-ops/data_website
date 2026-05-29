@@ -1,21 +1,27 @@
 // Mock Data
 const DEFAULT_MOCK_DATA = {
   categories: [
-    { id: 'c1', name: '3C' },
-    { id: 'c2', name: '日用品' },
-    { id: 'c3', name: '顯示卡' }
+    { id: 'c1', name: '手機' },
+    { id: 'c6', name: '3C周邊' },
+    { id: 'c2', name: '電腦零件' },
+    { id: 'c3', name: '筆記型電腦' },
+    { id: 'c4', name: '日用品' },
+    { id: 'c5', name: '家電' }
   ],
   generalItems: [
     { id: 'g1', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1511385348-a52b4a160dc2?w=500&q=80', price: 29900, name: '高階智慧型手機', stock: 15, desc: '最新的旗艦級手機，配備強大的處理器與相機。不僅擁有極致的效能，更具備令人驚豔的顯示螢幕。', specs: '螢幕: 6.7 吋 / 儲存容量: 256GB / 顏色: 曜石黑' },
-    { id: 'g2', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80', price: 45000, name: '輕薄筆記型電腦', stock: 8, desc: '適合商務與創作者的輕薄高效能筆電。具備長效電池續航力，讓您隨時隨地保持生產力。', specs: '螢幕: 14 吋 / 處理器: Core i7 / 記憶體: 16GB RAM' },
-    { id: 'g3', categoryId: 'c2', img: 'https://images.unsplash.com/photo-1542222024-c39e2281f121?w=500&q=80', price: 120, name: '有機洗髮精', stock: 50, desc: '天然植物萃取，溫和不刺激。適合各種髮質，洗後清爽無負擔。', specs: '容量: 500ml / 產地: 台灣' },
-    { id: 'g4', categoryId: 'c2', img: 'https://pic.616pic.com/ys_bnew_img/00/12/93/IoeHbh1sY8.jpg', price: 2000, name: '極品痔瘡藥膏', stock: 100, desc: '100 % 純天然，用過都說讚。', specs: '容量: 30g / 使用方式: 外用' },
-    { id: 'g5', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80', price: 10990, name: 'ASUS ROG RTX3060', stock: 10, desc: '華碩 ROG 玩家共和國高階顯示卡，散熱極佳，支援光線追蹤。', specs: '晶片: GeForce RTX 3060 / 記憶體: 12GB GDDR6' },
-    { id: 'g6', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=500&q=80', price: 25990, name: 'GIGABYTE RTX5060', stock: 5, desc: '技嘉最新世代顯示卡，效能突破天際，暢玩所有 3A 大作。', specs: '晶片: GeForce RTX 5060 / 記憶體: 16GB GDDR7' }
+    { id: 'g2', categoryId: 'c3', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&q=80', price: 45000, name: '輕薄筆記型電腦', stock: 8, desc: '適合商務與創作者的輕薄高效能筆電。具備長效電池續航力，讓您隨時隨地保持生產力。', specs: '螢幕: 14 吋 / 處理器: Core i7 / 記憶體: 16GB RAM' },
+    { id: 'g3', categoryId: 'c4', img: 'https://images.unsplash.com/photo-1542222024-c39e2281f121?w=500&q=80', price: 120, name: '有機洗髮精', stock: 50, desc: '天然植物萃取，溫和不刺激。適合各種髮質，洗後清爽無負擔。', specs: '容量: 500ml / 產地: 台灣' },
+    { id: 'g4', categoryId: 'c4', img: 'https://pic.616pic.com/ys_bnew_img/00/12/93/IoeHbh1sY8.jpg', price: 2000, name: '極品痔瘡藥膏', stock: 100, desc: '100 % 純天然，用過都說讚。', specs: '容量: 30g / 使用方式: 外用' },
+    { id: 'g5', categoryId: 'c2', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80', price: 10990, name: 'ASUS ROG RTX3060', stock: 10, desc: '華碩 ROG 玩家共和國高階顯示卡，散熱極佳，支援光線追蹤。', specs: '晶片: GeForce RTX 3060 / 記憶體: 12GB GDDR6' },
+    { id: 'g6', categoryId: 'c2', img: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=500&q=80', price: 25990, name: 'GIGABYTE RTX5060', stock: 5, desc: '技嘉最新世代顯示卡，效能突破天際，暢玩所有 3A 大作。', specs: '晶片: GeForce RTX 5060 / 記憶體: 16GB GDDR7' },
+    { id: 'g7', categoryId: 'c6', img: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&q=80', price: 1290, name: '無線藍牙滑鼠', stock: 30, desc: '輕巧好攜帶的無線滑鼠，支援多裝置切換，適合辦公與外出使用。', specs: '連線: Bluetooth / 續航: 90 天 / 顏色: 石墨灰' },
+    { id: 'g8', categoryId: 'c6', img: 'https://images.unsplash.com/photo-1625842268584-8f3296236761?w=500&q=80', price: 1890, name: 'USB-C 多功能集線器', stock: 18, desc: '整合 HDMI、USB 與讀卡機接口，筆電外接螢幕與周邊更方便。', specs: '接口: HDMI, USB-A, SD / 材質: 鋁合金' },
+    { id: 'g9', categoryId: 'c6', img: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=500&q=80', price: 3290, name: '降噪藍牙耳機', stock: 22, desc: '主動降噪搭配清晰通話麥克風，通勤、會議與娛樂都能穩定使用。', specs: '降噪: ANC / 續航: 32 小時 / 充電: USB-C' }
   ],
   auctionItems: [
-    { id: 'a1', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80', name: '限量版智慧手錶', startPrice: 5000, currentPrice: 8500, timeLeft: 7200 },
-    { id: 'a2', categoryId: 'c1', img: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=500&q=80', name: '絕版機械鍵盤', startPrice: 2000, currentPrice: 4200, timeLeft: 3600 }
+    { id: 'a1', categoryId: 'c6', img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&q=80', name: '限量版智慧手錶', startPrice: 5000, currentPrice: 8500, timeLeft: 7200 },
+    { id: 'a2', categoryId: 'c2', img: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=500&q=80', name: '絕版機械鍵盤', startPrice: 2000, currentPrice: 4200, timeLeft: 3600 }
   ],
   member: {
     id: '',
@@ -53,6 +59,26 @@ const DEFAULT_MOCK_DATA = {
 };
 
 const MOCK_DATA = JSON.parse(localStorage.getItem('MOCK_DATA')) || DEFAULT_MOCK_DATA;
+MOCK_DATA.categories = DEFAULT_MOCK_DATA.categories;
+DEFAULT_MOCK_DATA.generalItems.forEach(defaultItem => {
+  if (!MOCK_DATA.generalItems.some(item => item.id === defaultItem.id)) {
+    MOCK_DATA.generalItems.push(defaultItem);
+  }
+});
+DEFAULT_MOCK_DATA.auctionItems.forEach(defaultItem => {
+  if (!MOCK_DATA.auctionItems.some(item => item.id === defaultItem.id)) {
+    MOCK_DATA.auctionItems.push(defaultItem);
+  }
+});
+MOCK_DATA.generalItems.forEach(item => {
+  const defaultItem = DEFAULT_MOCK_DATA.generalItems.find(defaultItem => defaultItem.id === item.id);
+  if (defaultItem) item.categoryId = defaultItem.categoryId;
+  if (item.name.includes('洗衣機')) item.categoryId = 'c5';
+});
+MOCK_DATA.auctionItems.forEach(item => {
+  const defaultItem = DEFAULT_MOCK_DATA.auctionItems.find(defaultItem => defaultItem.id === item.id);
+  if (defaultItem) item.categoryId = defaultItem.categoryId;
+});
 let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
 function saveData() {
@@ -84,12 +110,14 @@ function renderNavbar() {
   const isOrders = path.includes('orders.html') ? 'active' : '';
   const isCart = path.includes('cart.html') ? 'active' : '';
 
+  const currentCategory = new URLSearchParams(window.location.search).get('category');
   const navHTML = `
     <nav class="navbar">
       <div class="nav-left">
-        <a href="index.html" class="logo">PCHouse專賣店</a>
-        <div id="category-links" style="display:flex; gap:10px;">
-          ${MOCK_DATA.categories.map(c => `<a href="index.html?category=${c.id}" class="nav-link">${c.name}</a>`).join('')}
+        <a href="index.html" class="logo">標標</a>
+        <span class="nav-divider"></span>
+        <div id="category-links">
+          ${MOCK_DATA.categories.map(c => `<a href="index.html?category=${c.id}" class="nav-category-link${currentCategory === c.id ? ' active-cat' : ''}">${c.name}</a>`).join('')}
         </div>
       </div>
       <div class="nav-right">
@@ -140,6 +168,11 @@ function renderAuctionItems() {
   let items = MOCK_DATA.auctionItems;
   if (categoryFilter) {
     items = items.filter(item => item.categoryId === categoryFilter);
+  }
+
+  if (items.length === 0) {
+    container.innerHTML = '<p class="empty-message">暫無競標商品</p>';
+    return;
   }
 
   container.innerHTML = items.map(item => `
